@@ -26,6 +26,6 @@
  * Return count of the number of elements in any 1-d array or any type whose
  * array designator is passed to it 
  */
-#define Elements(COLL) (sizeof(COLL)/sizeof(COLL[0]))
+#define Elements(COLL) (sizeof(COLL)/sizeof((COLL)[0]))
 
 #endif

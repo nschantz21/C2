@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 
-int main(int argc, const char* argv[])
+int main(int argc, char *argv[])
 {
     /* print the argument count */
     printf("%d\n", argc);
