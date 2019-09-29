@@ -28,6 +28,5 @@ size_t StrToUpper(char *s1, const char *s2) {
     
     /* add null pointer to end of the target string */
     *s1 = '\0';
-    
     return (size_t)(s2 - START);
 }
