@@ -17,11 +17,13 @@
 #include <stdio.h>
 
 int *FindFirstInt(const int *ptr, size_t count, int value) {
+    /* iterate through array and return first element equal to value */
     for (size_t counter = 0; counter < count; counter++) {
-        /* required to cast ptr to int pointer from const int pointer */
         if (ptr[counter] == value) {
+            /* required to cast ptr to int pointer from const int pointer */
             return (int *)&ptr[counter];
         }
     }
+    /* return null pointer if value not found in array */
     return NULL;
 }
