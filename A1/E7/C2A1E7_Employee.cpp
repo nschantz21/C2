@@ -15,10 +15,10 @@
 #include <cstring>
 #include <cstdlib>
 
-void Employee::Set(const char *set_name) {
-    /* create static variable. it will be deleted otherwise */
-    static char *new_name;
+void Employee::Set(const char *set_name)
+{
     /* dynamically  allocate  exactly  the  amount  of  memory  necessary */
+    char *new_name;
     size_t alloc_size = strlen(set_name) + 1;
     new_name = new char[alloc_size];
     /* copy memory into new static variable */
