@@ -38,5 +38,8 @@ int main() {
     nameReturn = employee->Get(&nameOutVar);
     cout << nameReturn << '\n';
     
+    /* test raise */
+    
+    
     return 0;
 }
