@@ -11,17 +11,19 @@
  * Program produces the value of parameterobject as if it had been rotated by the
  * number of positions and in the direction specified by count.
  */
+#include <iostream>
 
 int CountIntBitsF();
 
 unsigned Rotate(unsigned object, int count)
 {
     int int_bits = CountIntBitsF();
-    if (count >= 0) {
+    /* rotate right if positive, left if negative */  
+    if (count > 0) {
         /* right rotate */
-        return object >> count;
+        return (object >> count) | (object << (int_bits - count));
     } else {
         /* left rotate */
-        return object << count;
+        return (object << -count) | (object >> (int_bits - -count)); 
     }
 }
