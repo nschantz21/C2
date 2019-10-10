@@ -16,7 +16,8 @@
 #include <stddef.h>
 #include <stdio.h>
 
-int *FindFirstInt(const int *ptr, size_t count, int value) {
+int *FindFirstInt(const int *ptr, size_t count, int value) 
+{
     /* iterate through array and return first element equal to value */
     for (size_t counter = 0; counter < count; counter++) {
         if (ptr[counter] == value) {
