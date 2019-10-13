@@ -1,0 +1,24 @@
+/*
+ * Nicholas Schantz U08416544
+ * nschantz21@gmail.com
+ * C/C++ Programming II
+ * 142605 Ray Mitchell
+ * 2019-10-15
+ * C2A3E1_Sentences.txt
+ * Linux Ubuntu 16.04.4 LTS
+ * g++ 5.4.0
+ * 
+ * Use the Right-Left rule to create a numbered sentence for each expression that
+ * describes the data type 21 that  identifier  values  is  treated  as.
+ */
+
+1. values decays to a pointer to a double
+2. values decays to a pointer to a double
+3. values is array of double
+4. values decays to a pointer to a double
+5. values decays to a pointer to a double
+6. values decays to a pointer to a double
+7. values decays to a pointer to a double
+8. values is array of double
+9. values decays to a pointer to a double
+10. values decays to a pointer to a double
