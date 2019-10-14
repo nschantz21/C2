@@ -1,5 +1,14 @@
 /*
- * 
+ * Nicholas Schantz U08416544
+ * nschantz21@gmail.com
+ * C/C++ Programming II
+ * 142605 Ray Mitchell
+ * 2019-10-15
+ * C2A3E4_OpenFile.c
+ * Linux Ubuntu 16.04.4 LTS
+ * g++ 5.4.0
+ *
+ * Program to open file in read-only text mode
  */
 
 #include <stdlib.h>
