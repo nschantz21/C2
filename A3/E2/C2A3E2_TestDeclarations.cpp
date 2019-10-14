@@ -12,11 +12,13 @@
  * Right-Left rule
  */
 
+const int array_size = 6;
+
 void TestDeclarations()
 {
-    double (*ap)[6] = {0};        //1.
-    long long *(**bce)[6];        //2.
-    bce = (long long *(**)[6])ap; //3.
-    long &rF2(unsigned *delay);   //4.
-    double (*&a1)[6] = ap;        //5.
+    double (*ap)[array_size] = {0};        // 1.
+    long long *(**bce)[array_size];        // 2.
+    bce = (long long *(**)[array_size])ap; // 3.
+    long &rF2(unsigned *delay);            // 4.
+    double (*&a1)[array_size] = ap;        // 5.
 }
