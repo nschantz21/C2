@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #define ENDPOINT 5
-#define TERMINATE 13
+#define TERMINATE 999
 
 void RecordOpinions(void)
 {
@@ -14,7 +14,8 @@ void RecordOpinions(void)
     int input_num;
     while(true) {
         /* prompt user for ratings of a product */
-        printf("%d %d %d\n", -ENDPOINT, ENDPOINT, TERMINATE);
+        printf("Enter values between %d and %d. Use %d to terminate\n",
+            -ENDPOINT, ENDPOINT, TERMINATE);
         scanf("%d", &input_num);
         if (input_num == TERMINATE) {
             /* end loop */
@@ -31,6 +32,6 @@ void RecordOpinions(void)
    printf("Rating  Responses\n------  ---------\n");
     for (int resp = 0; resp < num_of_resp; resp++) {
         /* fix padding */
-        printf("%d  %d\n", resp, responses[resp]);
+        printf("%6d  %9d\n", resp, responses[resp]);
     }
 }
