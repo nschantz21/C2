@@ -16,17 +16,16 @@
 
 #define ENDPOINT 5
 #define TERMINATE 999
+#define RESPC (2 * ENDPOINT + 1)
 
 void RecordOpinions(void)
 {
-    int num_of_resp = 2 * ENDPOINT + 1;
-    int responses[num_of_resp] = {0};
-
-    int input_num;
-    while(true) {
+    int responses[RESPC] = {0};
+    for (;;) {
         /* prompt user for ratings of a product */
         printf("Enter values between %d and %d. Use %d to terminate\n",
             -ENDPOINT, ENDPOINT, TERMINATE);
+        int input_num;
         scanf("%d", &input_num);
         if (input_num == TERMINATE) {
             /* end loop */
@@ -36,12 +35,15 @@ void RecordOpinions(void)
             printf("User input outside of range.\n");
         } else {
             /* increment corresponding rating */
-            responses[input_num]++;
+            int *midpoint = &responses[ENDPOINT];
+            midpoint[input_num]++;
         }
     }
     /* Display table */
-    printf("Rating  Responses\n------  ---------\n");
-    for (int resp = 0; resp < num_of_resp; resp++) {
-        printf("%6d  %9d\n", resp, responses[resp]);
+    printf(
+        "Rating  Responses\n"
+        "------  ---------\n");
+    for (int resp = 0; resp < RESPC; resp++) {
+        printf("%6d  %9d\n", resp - ENDPOINT, responses[resp]);
     }
 }
