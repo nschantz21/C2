@@ -22,19 +22,17 @@
 void ParseStringFields(FILE *fp)
 {
     char store_str[CHARBUFF];
-    char *pch;
     /* read until end of file */
     while (!feof(fp)) {
-        /* read input from file one line at a time and tokenize */
+        /* read input from file one line at a time. parse on newline */
         fgets(store_str, CHARBUFF, fp);
-        pch = strtok(store_str, DELIMS);
+        /* tokenize line from file */
+        char *pch = strtok(store_str, DELIMS);
         while (pch != NULL) {
-            /* remove leading whitespace */
-            for (int ccount = 0; ccount < strlen(pch); ccount++){
-                if (!isspace(pch[ccount])) {
-                    pch = &pch[ccount];
-                    break;
-                }
+            /* remove leading whitespace defined by isspace */
+            while (isspace(pch[0])) {
+                /* reassign pointer to next element if isspace */
+                pch = &pch[1];
             }
             printf("%s\n", pch);
             pch = strtok(NULL, DELIMS);
