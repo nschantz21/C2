@@ -11,8 +11,8 @@
  * Define macro to access any element of an arbitrarily sized array given a
  * pointer to the array, the element index, and array dimensions
  */
-#ifndef C2A4E2_STORAGEMAP5D
-#define C2A4E2_STORAGEMAP5D
+#ifndef C2A4E2_STORAGEMAP5D_H
+#define C2A4E2_STORAGEMAP5D_H
 
 #define StorageMap5D(ptr, idx0, idx1, idx2, idx3, idx4, dim1, dim2, dim3, dim4)\
     (*((ptr)\

@@ -20,16 +20,17 @@
 void RandomizeArray(float inputArray[][DIM2][DIM3][DIM4])
 {
     /* seed random number generator with value of RTC */
-    srand((unsigned int)time(NULL)); 
-    /* DIM1 */
-    for (int da = 0; da < DIM1; da++){
-        /* DIM2 */
-        for (int db = 0; db < DIM2; db++){
-            /* DIM3 */
-            for (int dc = 0; dc < DIM3; dc++){
-                /* DIM4 */
-                for (int dd = 0; dd < DIM4; dd++){
-                    inputArray[da][db][dc][dd] = (float)rand();
+    srand((unsigned int)time(NULL));
+
+    for (int index1 = 0; index1 < DIM1; index1++) {
+        /* DIM1 */
+        for (int index2 = 0; index2 < DIM2; index2++) {
+            /* DIM2 */
+            for (int index3 = 0; index3 < DIM3; index3++) {
+                /* DIM3 */
+                for (int index4 = 0; index4 < DIM4; index4++) {
+                    /* DIM4 */
+                    inputArray[index1][index2][index3][index4] = (float)rand();
                 }
             }   
         }

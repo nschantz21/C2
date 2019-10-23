@@ -17,27 +17,27 @@ void ComputeAverages(float inputArray[][DIM2][DIM3][DIM4], float *nestAvg, float
 {
     /* array average using nested for loop access */
     float runnestAvg = 0;
-    for (int d1c = 0; d1c < DIM1; d1c++){
+    for (int index1 = 0; index1 < DIM1; index1++) {
         /* DIM1 */
-        for (int d2c = 0; d2c < DIM2; d2c++){
+        for (int index2 = 0; index2 < DIM2; index2++) {
             /* DIM2 */
-            for (int d3c = 0; d3c < DIM3; d3c++){
+            for (int index3 = 0; index3 < DIM3; index3++) {
                 /* DIM3 */
-                for (int d4c = 0; d4c < DIM4; d4c++){
+                for (int index4 = 0; index4 < DIM4; index4++) {
                     /* DIM4 */
-                    runnestAvg += inputArray[d1c][d2c][d3c][d4c];
+                    runnestAvg += inputArray[index1][index2][index3][index4];
                 }
-            }   
+            }
         }
     }
     *nestAvg = runnestAvg / TOTAL;
-	
-	/* average using linear access */
-	float *pnt, linsum = 0;
-	for (pnt = (float *)inputArray; pnt < (float *)inputArray + DIM1 * DIM2 * DIM3 * DIM4; ++pnt) {
+    
+    /* average using linear access */
+    float linsum = 0;
+    for (float *pnt = (float *)inputArray; pnt < (float *)inputArray + DIM1 * DIM2 * DIM3 * DIM4; ++pnt) {
         linsum += *pnt;
-	}
-	*linAvg = linsum / TOTAL;
+    }
+    *linAvg = linsum / TOTAL;
 
     return;
 }
