@@ -12,34 +12,32 @@
  * passed to function.
  */
 #include "C2A4E1_ArraySize.h"
-#include <iostream>
-using namespace std;
 
-void ComputeAverages(float inputArray[][DIM1][DIM2][DIM3][DIM4], float *nestAvg, float *linAvg)
+void ComputeAverages(float inputArray[][DIM2][DIM3][DIM4], float *nestAvg, float *linAvg)
 {
+    /* array average using nested for loop access */
     float runnestAvg = 0;
     for (int d1c = 0; d1c < DIM1; d1c++){
-        /* DIM2 */
+        /* DIM1 */
         for (int d2c = 0; d2c < DIM2; d2c++){
-            /* DIM3 */
+            /* DIM2 */
             for (int d3c = 0; d3c < DIM3; d3c++){
-                /* DIM4 */
+                /* DIM3 */
                 for (int d4c = 0; d4c < DIM4; d4c++){
-                    cout << inputArray[d1c][d2c][d3c][d4c];
-                    //runnestAvg += inputArray[d1c][d2c][d3c][d4c];
-                    
+                    /* DIM4 */
+                    runnestAvg += inputArray[d1c][d2c][d3c][d4c];
                 }
             }   
         }
     }
-    *nestAvg = runnestAvg;
-    
-    float runlinAvg = 0;
-    const float *d = (const float *)inputArray;
-    const float *const dend = d + DIM1 * DIM2 * DIM3 * DIM4;
-    while ( d != dend )
-		runlinAvg += *d++;
+    *nestAvg = runnestAvg / TOTAL;
 	
-	*linAvg = runlinAvg;
+	/* average using linear access */
+	float *pnt, linsum = 0;
+	for (pnt = (float *)inputArray; pnt < (float *)inputArray + DIM1 * DIM2 * DIM3 * DIM4; ++pnt) {
+        linsum += *pnt;
+	}
+	*linAvg = linsum / TOTAL;
+
     return;
 }
