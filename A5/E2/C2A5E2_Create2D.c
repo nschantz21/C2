@@ -28,27 +28,11 @@ void *SafeMalloc(size_t size)
 
 Type **Create2D(size_t rows, size_t cols)
 {
-    /* This version fails */
-    /*
-    Type **matrix = (Type **) malloc(rows * sizeof(Type *));
-    for (int i = 0; i < rows; i++) {
-        matrix[i] = (Type *)malloc(cols * sizeof(Type));
-    }
-    
-    return(matrix);
-    */
-    
-    /* version 4 */
-    Type **p;
-    size_t total = rows * sizeof(Type *) + sizeof(Type) * rows * cols;
-    /* allocate memory for array */
-    p = (Type **)malloc(total);
-    //p[0] = (Type *)(malloc(rows * cols * sizeof(Type)));
-    /* set first row elements to point to where the sub arrays start */
-    for (int i = 0; i < rows; i++) {
-        p[i] = p[i] + rows - i + cols * i;
-    }
-
+    Type *mem = (Type *)malloc(rows * cols * sizeof(Type));
+    Type **p = (Type **)malloc(rows * sizeof(Type *));
+    p[0] = mem;
+    for(int i = 1; i < rows; i++)
+        p[i] = p[i-1] + cols;
     return (p);
 }
 
