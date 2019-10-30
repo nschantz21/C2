@@ -1,0 +1,58 @@
+switch (machine_state)
+{
+    case "start":
+        break;
+    case "no_whole":
+        break;
+    case "whole":
+        break;
+    case "fract":
+        break;
+    case "exponent_prefix":
+        break;
+    case "exponent":
+        break;
+}
+
+switch (chPtr) {
+    case '.':
+        
+        break;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+        
+        break;
+    /* float */
+    case 'f':
+    case 'F':
+        break;
+    /* long double */
+    case 'l':
+    case 'L':
+        break;
+    /* exponent */
+    case 'e':
+    case 'E':
+        break;
+    /* end */
+    /* double */
+    case '\n':
+        
+        break;
+    /* positivity */
+    case '+':
+    case '-':
+        break;
+    /* failure */
+    default:
+        return NO_MATCH;
+        break;
+}
