@@ -18,7 +18,7 @@
 int Compare(const void *elemA, const void *elemB)
 {
     // use strcmp
-    int res = strcmp(*(const char **)elemA, *(const char **)elemB);
+    int res = strcmp(*(char **)elemA, *(char **)elemB);
     return res;
 }
 
@@ -36,8 +36,9 @@ void DisplayClassStatus(const char *registrants[], size_t registrantCount,
     /* find and print names of registrants who did not attend */
     printf("Not present:\n");
     for (size_t rcntr = 0; rcntr < registrantCount; rcntr++) {
-        char *res = (char *)bsearch(&registrants[rcntr], attendees,
+        void *res = bsearch(&registrants[rcntr], attendees,
             attendeeCount, sizeof(const char *), Compare);
+        /* print name of student if not found */
         if (res == NULL) {
             printf("%s\n", registrants[rcntr]);
         }
@@ -46,8 +47,9 @@ void DisplayClassStatus(const char *registrants[], size_t registrantCount,
     /* find and print names of unregistered attendees */
     printf("Not registered:\n");
     for (size_t acntr = 0; acntr < attendeeCount; acntr++) {
-        char *res = (char *)bsearch(&attendees[acntr], registrants,
+        void *res = bsearch(&attendees[acntr], registrants,
             registrantCount, sizeof(const char *), Compare);
+        /* print name of student if not found */
         if (res == NULL) {
             printf("%s\n", attendees[acntr]);
         }
