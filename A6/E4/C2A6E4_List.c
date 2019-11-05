@@ -16,7 +16,7 @@
 #include <string.h>
 #include "C2A6E4_List-Driver.h"
 
-#define BUFSIZE 1024
+#define BUFSIZE 24
 
 static void *SafeMalloc(size_t size)
 {
@@ -43,10 +43,10 @@ List *CreateList(FILE *fp)
     
     char buffer[BUFSIZE];
     /* attempt to read string from file */
-    while (fscanf(fp, "%s", buffer) != EOF) {
+    while (fscanf(fp, "%23s", buffer) != EOF) {
         /* iterate over List values */
         int found = 0;
-        for (List *ptr = head; ptr != NULL && (ptr->next); ptr = ptr->next) {
+        for (List *ptr = head; ptr != NULL; ptr = ptr->next) {
             /* if in list */
             if (strcmp(ptr->str, buffer) == 0) {
                 found = 1;
@@ -56,20 +56,19 @@ List *CreateList(FILE *fp)
         }
         
         if (found != 1) {
-                List *new_node = NewList();
-                char *new_str;
-                size_t alloc_size = strlen(buffer) + 1;
-                new_str = (char *)SafeMalloc(alloc_size);
-                /* point the node's char pointer to that allocation and copy string into it */
-                new_node->str = new_str;
-                memcpy(new_str, buffer, alloc_size);
-                /* set node's string count to 1 */
-                new_node->count = 1;
-                /* push node onto the head of the list */
-                new_node->next = head;
-                head = new_node;
+            List *new_node = NewList();
+            char *new_str;
+            size_t alloc_size = strlen(buffer) + 1;
+            new_str = (char *)SafeMalloc(alloc_size);
+            /* point the node's char pointer to that allocation and copy string into it */
+            new_node->str = new_str;
+            memcpy(new_str, buffer, alloc_size);
+            /* set node's string count to 1 */
+            new_node->count = 1;
+            /* push node onto the head of the list */
+            new_node->next = head;
+            head = new_node;
         }
-
     }
     /* return List head pointer */
     return head;
@@ -95,5 +94,5 @@ void FreeList(List *head)
         free(ptr->str);
         /* free current node */
         free(ptr);
-   }
+    }
 }
