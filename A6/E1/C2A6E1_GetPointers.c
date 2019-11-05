@@ -16,13 +16,13 @@
 int (*GetPrintfPointer(void))(const char *format, ...)
 {
     static int (*pPrintf)(const char *format, ...);
-    pPrintf = printf;
+    pPrintf = &printf;
     return pPrintf;
 }
 
 int (*GetPutsPointer(void))(const char *str)
 {
     static int (*pPuts)(const char *str);
-    pPuts = puts;
+    pPuts = &puts;
     return pPuts;
 }
