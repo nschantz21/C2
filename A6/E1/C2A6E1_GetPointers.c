@@ -15,14 +15,14 @@
 
 int (*GetPrintfPointer(void))(const char *format, ...)
 {
-    int (*pPrintf)(const char *format, ...);
-    pPrintf = &printf;
+    static int (*pPrintf)(const char *format, ...);
+    pPrintf = printf;
     return pPrintf;
 }
 
 int (*GetPutsPointer(void))(const char *str)
 {
-    int (*pPuts)(const char *str);
-    pPuts = &puts;
+    static int (*pPuts)(const char *str);
+    pPuts = puts;
     return pPuts;
 }
