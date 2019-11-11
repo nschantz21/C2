@@ -1,26 +1,16 @@
-/***************************************************************************
-
-   SPECIAL REQUIREMENTS FOR THIS EXERCISE ONLY:
-
-      PLEASE DO NOT SUBMIT THIS ORIGINAL FILE TO THE "AUTOMATED ASSIGNMENT
-      CHECKER" OR TO THE INSTRUCTOR.
-      
-      Unlike all the other programming exercises, you will need to understand
-      the code in this file so you can copy it into your own file, modify it,
-      test it, and submit it.  Please see the complete exercise requirements
-      in the assignment 7 requirements document.
-   
-   Thank you!
-
- **************************************************************************/
-
-
 /*
- * Leaving the following macro defined enables the binary tree code.
- * Commenting it out enables the hash table code.  Completely remove
- * this macro and all references to it in the program you produce.
+ * Nicholas Schantz U08416544
+ * nschantz21@gmail.com
+ * C/C++ Programming II
+ * 142605 Ray Mitchell
+ * 2019-11-12
+ * C2A7E1_main.c
+ * Linux Ubuntu 16.04.4 LTS
+ * g++ 5.4.0
+ * 
+ * Perform hashing function and store the words in ordered binary trees instead
+ * of singly linked lists.
  */
-//#define TREE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +18,9 @@
 
 #define LINE_LEN 256                 /* size of input buffer */
 #define BUFFMT "%255"                /* field width for input buffer scan */
+#define MIN_ARGS 3                   /* fewest command line arguments */
+#define FILE_ARG_IX 1                /* index of file name argument */
+#define BINS_ARG_IX 2                /* index of bin count argument */
 
 void *SafeMalloc(size_t size)
 {
@@ -54,51 +47,74 @@ FILE *OpenFile(const char *fileName)
    return fp;
 }
 
-#ifdef TREE
-/***************************************************************************
-                                  (Binary Trees)
- ***************************************************************************/
-
-#define MIN_ARGS 2                  /* fewest command line arguments */
-#define FILE_ARG_IX 1               /* index of file name argument */
-
 typedef struct Node NODE;
 struct Node
 {
-   char *strng;                  /* points to string this node represents */
-   size_t count;                 /* number of occurrences of this string */
-   NODE *left, *right;           /* pointers to left and right children */
+   char *strng;         /* points to string this node represents */
+   size_t count;        /* number of occurrences of this string */
+   NODE *left, *right;  /* pointers to left and right children */
 };
 
-/*
- * BuildTree will search the binary tree at pNode for a node representing the
- * string in str.  If found, its string count will be incremented.  If not
- * found, a new node for that string will be created, put in alphabetical
- * order, and its count set to 1.  A pointer to the node for string str is
- * returned.
- */
-NODE *BuildTree(NODE *pNode, char *str)
+typedef struct          /* type of table array elements */
 {
-   if (pNode == NULL)                               /* string not found */
-   {
-      size_t length = strlen(str) + 1;              /* length of string */
+   size_t nodes;        /* # of list nodes for this bin */
+   NODE *firstNode;     /* 1st node in this bin's tree */
+} BIN;
 
-      pNode = (NODE *)SafeMalloc(sizeof(NODE));     /* allocate a node */
+typedef struct          /* type of hash table descriptor */
+{
+   size_t bins;         /* bins in hash table */
+   BIN *firstBin;       /* first bin */
+} TABLE;
+
+int HashFunction(const char *key, size_t bins)  /* get bin value from key */
+{
+   return((int)(strlen(key) % bins));           /* value is character count % bins */
+}
+
+/* CreateTable creates and initializes the hash table and its bins */
+TABLE *CreateTable(size_t bins)
+{
+   TABLE *hashTable;
+   BIN *end;
+   hashTable = (TABLE *)SafeMalloc(sizeof(TABLE));   /* alloc desc struct */
+   hashTable->bins = bins;                           /* how many bins */
+   /* alloc bins */
+   hashTable->firstBin = (BIN *)SafeMalloc(bins * sizeof(BIN));
+   end = hashTable->firstBin + bins;                      /* end of bins */
+
+   for (BIN *bin = hashTable->firstBin; bin < end; ++bin) /* initialize bins */
+   {
+      bin->nodes = 0;                                     /* no btree nodes */
+      bin->firstNode = NULL;                              /* no btree */
+   }
+   return(hashTable);
+}
+
+NODE *BuildTree(NODE *pNode, char *str, BIN *pBin)
+{
+   if (pNode == NULL)                                        /* string not found */
+   {
+      printf("added %s\n", str);
+      size_t length = strlen(str) + 1;                       /* length of string */
+
+      pNode = (NODE *)SafeMalloc(sizeof(NODE));              /* allocate a node */
       pNode->strng = (char *)SafeMalloc(length);
-      memcpy(pNode->strng, str, length);            /* copy string */
-      pNode->count = 1;                             /* 1st occurrence */
-      pNode->left = pNode->right = NULL;            /* no subtrees */
+      memcpy(pNode->strng, str, length);                     /* copy string */
+      pNode->count = 1;                                      /* 1st occurrence */
+      pNode->left = pNode->right = NULL;                     /* no subtrees */
+      ++pBin->nodes;                                         /* increment bin count */
    }
    else
    {
-      int result = strcmp(str, pNode->strng);    /* compare strings */
+      int result = strcmp(str, pNode->strng);                /* compare strings */
 
-      if (result == 0)                           /* new string == current */
-         ++pNode->count;                         /* increment occurrence */
-      else if (result < 0)                       /* new string < current */
-         pNode->left = BuildTree(pNode->left, str);     /* traverse left */
-      else                                       /* new string > current */
-         pNode->right = BuildTree(pNode->right, str);   /* traverse right */
+      if (result == 0)                                       /* new string == current */
+         ++pNode->count;                                     /* increment occurrence */
+      else if (result < 0)                                   /* new string < current */
+         pNode->left = BuildTree(pNode->left, str, pBin);    /* traverse left */
+      else                                                   /* new string > current */
+         pNode->right = BuildTree(pNode->right, str, pBin);  /* traverse right */
    }
    return(pNode);
 }
@@ -126,153 +142,30 @@ void FreeTree(NODE *pNode)
    }
 }
 
-int main(int argc, char *argv[])
-{
-   char buf[LINE_LEN];                           /* word string buffer */
-   char fileName[LINE_LEN];                      /* file name buffer */
-   NODE *root;                                   /* pointer to root node */
-   FILE *fp;
-
-   /* Read file name from command line */
-   if (argc < MIN_ARGS || sscanf(argv[FILE_ARG_IX], BUFFMT "s", fileName) != 1)
-   {
-      fprintf(stderr, "No file name specified on command line\n");
-      return EXIT_FAILURE;
-   }
-
-   fp = OpenFile(fileName);
-
-   /*
-    * The following loop will read one string at a time from stdin
-    * until EOF is reached.  For each string read the BuildTree
-    * function will be called to update the tree.
-    */
-   for (root = NULL; fscanf(fp, BUFFMT "s", buf) != EOF;
-      root = BuildTree(root, buf))
-      ;
-   fclose(fp);
-   PrintTree(root);
-   FreeTree(root);
-   return(EXIT_SUCCESS);
-}
-
-
-#else
-/***************************************************************************
-                                    (Hashing)
- ***************************************************************************/
-
-#define MIN_ARGS 3                     /* fewest command line arguments */
-#define FILE_ARG_IX 1                  /* index of file name argument */
-#define BINS_ARG_IX 2                  /* index of bin count argument */
-
-typedef struct Node NODE;
-struct Node                            /* type of each list node */
-{
-   char *strng;                        /* string for this node */
-   size_t count;                       /* occurrences of this string */
-   NODE *next;                         /* next node in list */
-};
-
-typedef struct                         /* type of table array elements */
-{
-   size_t nodes;                       /* # of list nodes for this bin */
-   NODE *firstNode;                    /* 1st node in this bin's list */
-} BIN;
-
-typedef struct                         /* type of hash table descriptor */
-{
-   size_t bins;                        /* bins in hash table */
-   BIN *firstBin;                      /* first bin */
-} TABLE;
-
-int HashFunction(const char *key, size_t bins)  /* get bin value from key */
-{
-   return((int)(strlen(key) % bins));  /* value is character count % bins */
-}
-
-/* CreateTable creates and initializes the hash table and its bins */
-TABLE *CreateTable(size_t bins)
-{
-   TABLE *hashTable;
-   BIN *bin, *end;
-
-   hashTable = (TABLE *)SafeMalloc(sizeof(TABLE));   /* alloc desc struct */
-   hashTable->bins = bins;                           /* how many bins */
-   /* alloc bins */
-   hashTable->firstBin = (BIN *)SafeMalloc(bins * sizeof(BIN));
-   end = hashTable->firstBin + bins;                 /* end of bins */
-
-   for (bin = hashTable->firstBin; bin < end; ++bin) /* initialize bins */
-   {
-      bin->nodes = 0;                                /* no list nodes */
-      bin->firstNode = NULL;                         /* no list */
-   }
-   return(hashTable);
-}
-
-/*
- * BuildList will search bin bp of the list for a node representing
- * the string in str.  If found, its string count will be incremented.
- * If not found, a new node for that string will be created, put at
- * the top of the list, and its string count set to 1.
- */
-void BuildList(BIN *bp, const char *str)
-{
-   NODE *pNode = bp->firstNode;                 /* first node in list */
-
-   for (; pNode != NULL; pNode = pNode->next)   /* visit each node */
-      if (!strcmp(pNode->strng, str))           /* if strings match... */
-         break;                                 /* ...quit looking */
-   if (pNode == NULL)                           /* no matching node */
-   {
-      size_t length = strlen(str) + 1;          /* characters in string */
-
-      pNode = (NODE *)SafeMalloc(sizeof(NODE)); /* allocate new node */
-      pNode->strng = (char *)SafeMalloc(length);   /* storage for string */
-      memcpy(pNode->strng, str, length);        /* store string */
-      pNode->count = 1;                         /* set string count */
-      pNode->next = bp->firstNode;              /* insert new node... */
-      bp->firstNode = pNode;                    /* ...first in list */
-      ++bp->nodes;                              /* update node count */
-   }
-   else                                         /* found matching node */
-      ++pNode->count;                           /* increment string count */
-}
-
 /* PrintTable prints the hash table */
 void PrintTable(const TABLE *hashTable)
 {
-   BIN *bin, *end;
+   BIN *end;
 
    end = hashTable->firstBin + hashTable->bins;       /* end of bins */
-   for (bin = hashTable->firstBin; bin < end; ++bin)  /* visit bins */
+   for (BIN *bin = hashTable->firstBin; bin < end; ++bin)  /* visit bins */
    {
-      NODE *node;
-      printf("%d entries for bin %d:\n",
-         (int)bin->nodes, (int)(bin - hashTable->firstBin));
-      /* Visit nodes */
-      for (node = bin->firstNode; node != NULL; node = node->next)
-         printf("%4d  %s\n", (int)node->count, node->strng);
+      printf("%d entries for bin %d:\n", (int)bin->nodes, (int)(bin - hashTable->firstBin));
+      /* print the binary tree */
+      PrintTree(bin->firstNode);
    }
 }
 
 /* FreeTable frees the hash table */
 void FreeTable(TABLE *hashTable)
 {
-   BIN *bin, *end;
+   BIN *end;
 
-   end = hashTable->firstBin + hashTable->bins;       /* end of bins */
-   for (bin = hashTable->firstBin; bin < end; ++bin)  /* visit bins */
+   end = hashTable->firstBin + hashTable->bins;            /* end of bins */
+   for (BIN *bin = hashTable->firstBin; bin < end; ++bin)  /* visit bins */
    {
-      NODE *node;
-      for (node = bin->firstNode; node != NULL;)      /* visit nodes */
-      {
-         NODE *pNode = node;        /* save NODE pointer */
-         node = node->next;         /* point to next node */
-         free(pNode->strng);        /* free the string */
-         free(pNode);               /* free the node */
-      }
+      /* free binary tree within bin */
+      FreeTree(bin->firstNode);
    }
    free(hashTable->firstBin);       /* free all bins */
    free(hashTable);                 /* free table descriptor */
@@ -311,12 +204,11 @@ int main(int argc, char *argv[])
    {
       /* find appropriate bin */
       BIN *bin = &hashTable->firstBin[HashFunction(buf, (size_t)howManyBins)];
-      BuildList(bin, buf);                   /* put string in list */
+      /* add string to bin's tree */
+      bin->firstNode = BuildTree(bin->firstNode, buf, bin);
    }
    fclose(fp);
    PrintTable(hashTable);                    /* print all strings */
    FreeTable(hashTable);                     /* free the table */
    return(EXIT_SUCCESS);
 }
-
-#endif
