@@ -95,7 +95,6 @@ NODE *BuildTree(NODE *pNode, char *str, BIN *pBin)
 {
    if (pNode == NULL)                                        /* string not found */
    {
-      printf("added %s\n", str);
       size_t length = strlen(str) + 1;                       /* length of string */
 
       pNode = (NODE *)SafeMalloc(sizeof(NODE));              /* allocate a node */
