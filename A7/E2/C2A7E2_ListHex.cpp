@@ -12,7 +12,7 @@
  * file byte.
  */
 #include <iostream>
-#include <fstream>      // std::ifstream
+#include <fstream>
 #include <iomanip>
 
 using namespace std;
@@ -21,21 +21,19 @@ void ListHex(ifstream &inFile, int bytesPerLine)
 {
     char buffer;
     cout << setfill('0');
-    int outCount = 1;
+    int outCount = 0;
     
     while(inFile.read(&buffer, 1)) {
-        if (inFile.eof())
-        {
+        if (inFile.eof()) {
             break;
         } else {
-            cout << setw(2) << hex << (unsigned int) buffer << " ";
-            outCount++;
-        }
-        
-        if (outCount % bytesPerLine == 0) {
-           cout << "\n" ;
+            cout << setw(2) << hex << (unsigned long)buffer;
+            ++outCount;
+            if (outCount % bytesPerLine == 0) {
+                cout << "\n" ;
+            } else {
+                cout << " ";
+            }
         }
     }
-    
-    
 }
