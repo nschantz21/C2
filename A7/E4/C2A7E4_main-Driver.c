@@ -55,6 +55,7 @@ int main(void)
 
    size_t fileSize;
 
+    printf("attempting");
    // file for unaltered structures
    temporaryFile = OpenTemporaryFile();
    // write multiple structures
