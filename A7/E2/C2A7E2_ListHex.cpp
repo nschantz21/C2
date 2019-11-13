@@ -20,20 +20,25 @@ using namespace std;
 void ListHex(ifstream &inFile, int bytesPerLine)
 {
     char buffer;
-    cout << setfill('0');
+    /* set hex format and fill char */
+    cout << hex << setfill('0');
     int outCount = 0;
     
-    while(inFile.read(&buffer, 1)) {
+    /* read file one byte at a time */
+    while (inFile.read(&buffer, 1)) {
         if (inFile.eof()) {
             break;
         } else {
-            cout << setw(2) << hex << (unsigned long)buffer;
-            ++outCount;
             if (outCount % bytesPerLine == 0) {
-                cout << "\n" ;
-            } else {
+                cout << "\n";
+            } else if (outCount > 0) {
+                /* do not print trailing space at end of output */
                 cout << " ";
             }
+            /* print byte */
+            cout << setw(2) << (unsigned long)(unsigned char)buffer;
+            ++outCount;
+            /* print new line based on bytesPerLine */
         }
     }
 }
