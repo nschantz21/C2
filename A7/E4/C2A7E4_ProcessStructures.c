@@ -10,8 +10,8 @@
  * 
  * Create fucntions ReverseMembersEndian, ReadStructures, and WriteStructures
  * 
- * Were the results you got correct for your implementation?
- * How many padding bytes were in your structure?
+ * Were the results you got correct for your implementation? yes
+ * How many padding bytes were in your structure? 4
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,17 +21,17 @@ void *ReverseEndian(void *ptr, size_t size);
 
 struct Test *ReverseMembersEndian(struct Test *ptr)
 {
-    ptr->flt = *(float *)ReverseEndian((void *)&(ptr->flt), sizeof(ptr->flt));
-    ptr->dbl = *(double *)ReverseEndian((void *)&(ptr->dbl), sizeof(ptr->dbl));
-    ptr->vp = ReverseEndian(ptr->vp, sizeof(ptr->vp));
+    ptr->flt = *(float *)ReverseEndian((void *)&(ptr->flt), sizeof(float));
+    ptr->dbl = *(double *)ReverseEndian((void *)&(ptr->dbl), sizeof(double));
+    ptr->vp = ReverseEndian((void *)&(ptr->vp), sizeof(void *));
     return ptr;
 }
 
 struct Test *ReadStructures(struct Test *ptr, size_t count, FILE *fp)
 {
-    if (fread(&ptr, sizeof(*ptr), count, fp) != count) {
+    if (fread(ptr, sizeof(*ptr), count, fp) != count) {
         fprintf(stderr, "Reading Error\n");
-        exit(EXIT_FAILURE);  
+        exit(EXIT_FAILURE);
     } else {
         return ptr;        
     }
@@ -39,7 +39,7 @@ struct Test *ReadStructures(struct Test *ptr, size_t count, FILE *fp)
 
 struct Test *WriteStructures(const struct Test *ptr, size_t count, FILE *fp)
 {
-    if (fwrite(&ptr, sizeof(*ptr), count, fp) != count) {
+    if (fwrite(ptr, sizeof(*ptr), count, fp) != count) {
         fprintf(stderr, "Writing Error\n");
         exit(EXIT_FAILURE);    
     } else {
