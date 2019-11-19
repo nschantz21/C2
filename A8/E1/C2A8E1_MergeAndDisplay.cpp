@@ -17,7 +17,6 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
-#include <iomanip>
 #include <string.h>
 
 using namespace std;
@@ -32,9 +31,10 @@ void MergeAndDisplay(ifstream files[], size_t count) {
     char * buffer = new char[MAXBUFF];
     while (open_count > 0) {
         for (size_t cf = 0; cf < count; cf++) {
+            /* check if file is open, skip if not */
             if (files[cf].is_open()) {
 
-                files[cf].getline(buffer, SAFEBUF);
+                fscanf(files[cf], "%s", buffer);
                 /* check if file is empty */
                 if (strlen(buffer) == 0) {
                     /* if empty skip and close */
