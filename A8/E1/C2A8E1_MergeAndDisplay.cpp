@@ -17,7 +17,7 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 
 using namespace std;
 
@@ -27,25 +27,26 @@ const int SAFEBUF = MAXBUFF - 1;
 void MergeAndDisplay(ifstream files[], size_t count) {
     /* iterate over files */
     /* stop when they are all closed */
-    int open_count = count;
+    size_t open_count = count;
     char * buffer = new char[MAXBUFF];
     while (open_count > 0) {
-        for (size_t cf = 0; cf < count; cf++) {
+        for (size_t currf = 0; currf < count; currf++) {
             /* check if file is open, skip if not */
-            if (files[cf].is_open()) {
-
-                fscanf(files[cf], "%s", buffer);
+            if (files[currf].is_open()) {
+                files[currf].getline(buffer, SAFEBUF);
+                size_t length = strlen(buffer);
                 /* check if file is empty */
-                if (strlen(buffer) == 0) {
+                if (length == 0) {
                     /* if empty skip and close */
-                    files[cf].close();
+                    files[currf].close();
                     open_count--;
                 }
-                if ((strlen(buffer) != 0) && (buffer != NULL)) {
+                if ((length != 0) && (buffer != NULL)) {
                     cout << buffer << '\n';
                 }
             }
         }
     }
-    delete buffer;
+    /* delete allocation */
+    delete[] buffer;
 }

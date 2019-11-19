@@ -18,7 +18,7 @@
 
 using namespace std;
 
-void OpenFile(const char *fileName, ifstream &inFile)
+static void OpenFile(const char *fileName, ifstream &inFile)
 {
     inFile.open(fileName);
     /* check if file successfully opened */
@@ -33,7 +33,7 @@ void OpenFile(const char *fileName, ifstream &inFile)
 ifstream *OpenFiles(char * const fileNames[], size_t count)
 {
     /* create array of ifstreams */
-    static ifstream *filestreams = new ifstream[count];
+    ifstream *filestreams = new ifstream[count];
     for (size_t curr_file = 0; curr_file < count; curr_file++) {
         /* open all  */
         OpenFile(fileNames[curr_file], filestreams[curr_file]);
