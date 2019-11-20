@@ -18,25 +18,23 @@
 
 using namespace std;
 
-static void OpenFile(const char *fileName, ifstream &inFile)
-{
-    inFile.open(fileName);
-    /* check if file successfully opened */
-    if (!inFile.is_open()) {
-        cerr << fileName << " failed to open!\n";
-        exit(EXIT_FAILURE);
-    } else {
-        return;
-    }
-}
-
 ifstream *OpenFiles(char * const fileNames[], size_t count)
 {
     /* create array of ifstreams */
     ifstream *filestreams = new ifstream[count];
     for (size_t curr_file = 0; curr_file < count; curr_file++) {
-        /* open all  */
-        OpenFile(fileNames[curr_file], filestreams[curr_file]);
+		/* open file and check if open */
+        filestreams[curr_file].open(fileNames[curr_file]);
+		if (!filestreams[curr_file].is_open()) {
+			cerr << fileNames[curr_file] << " failed to open!\n";
+			while (curr_file > 0) {
+				filestreams[curr_file].close();
+				--curr_file;
+			 }
+			/* delete allocation */
+			delete[] filestreams;
+			exit(EXIT_FAILURE);
+		}
     }
     
     /* return pointer to first element of filestreams */

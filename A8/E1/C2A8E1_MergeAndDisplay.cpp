@@ -24,11 +24,16 @@ using namespace std;
 const int MAXBUFF = 512;
 const int SAFEBUF = MAXBUFF - 1;
 
-void MergeAndDisplay(ifstream files[], size_t count) {
+void MergeAndDisplay(ifstream files[], size_t count)
+{
+    if (count == 0) {
+		cerr << "Zero Files!\n";
+		exit(EXIT_FAILURE);
+	}
     /* iterate over files */
     /* stop when they are all closed */
     size_t open_count = count;
-    char * buffer = new char[MAXBUFF];
+    char *buffer = new char[MAXBUFF];
     while (open_count > 0) {
         for (size_t currf = 0; currf < count; currf++) {
             /* check if file is open, skip if not */
