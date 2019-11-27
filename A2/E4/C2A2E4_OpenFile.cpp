@@ -21,7 +21,6 @@ using namespace std;
 
 void OpenFile(const char *filename, ifstream &inFile)
 {
-    /* don't need ios::in */
     inFile.open(filename);
     /* check if file successfully opened */
     if (!inFile.is_open()) {

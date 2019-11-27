@@ -12,27 +12,11 @@
  * by swapping its bytes.
  */
 #include <stddef.h>
-#include <stdio.h>
 
-int IsLittleEndian(void)
-{
-    const int word = 1;
-    return (int)*(char *)&word;
-}
-
-/*
- * ptr –  a pointer to a scalar object whose endianness is to be reversed
- * size – the number of bytes in the object
- */
 void *ReverseEndian(void *ptr, size_t size)
 {
-    /* pointer to first byte */
-    char *head = (char *)ptr;
-    /* pointer to last byte */
-    char *tail = head + size - 1;
-    
     /* swap bytes at either end */
-    for (; tail > head; --tail, ++head) {
+    for (char *head = (char *)ptr, *tail = head + size - 1; tail > head; --tail, ++head) {
         char temp = *head;
         *head = *tail;
         *tail = temp;

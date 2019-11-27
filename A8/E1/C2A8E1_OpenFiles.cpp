@@ -28,9 +28,9 @@ ifstream *OpenFiles(char * const fileNames[], size_t count)
 		if (!filestreams[curr_file].is_open()) {
 			cerr << fileNames[curr_file] << " failed to open!\n";
 			while (curr_file > 0) {
-				filestreams[curr_file].close();
-				--curr_file;
-			 }
+                filestreams[curr_file].close();
+                --curr_file;
+			}
 			/* delete allocation */
 			delete[] filestreams;
 			exit(EXIT_FAILURE);
